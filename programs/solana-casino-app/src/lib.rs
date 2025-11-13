@@ -32,21 +32,24 @@ pub mod solana_casino_app {
         let vault_info = &mut ctx.accounts.vault.to_account_info();
 
         // subtract then add (checked arithmetic)
+        // subtract from payer
         **payer_info.try_borrow_mut_lamports()? = payer_info
             .lamports()
             .checked_sub(amount)
-            .ok_or(CasinoError::InvalidBet.into())?;
+            .ok_or(err!(CasinoError::InvalidBet))?;
+
+        // add to vault
         **vault_info.try_borrow_mut_lamports()? = vault_info
             .lamports()
             .checked_add(amount)
-            .ok_or(CasinoError::MathOverflow.into())?;
+            .ok_or(err!(CasinoError::MathOverflow))?;
 
         // update vault state
         let vault_account = &mut ctx.accounts.vault;
         vault_account.total_earnings = vault_account
             .total_earnings
             .checked_add(amount)
-            .ok_or(CasinoError::MathOverflow)?;
+            .ok_or(err!(CasinoError::MathOverflow))?;
 
         msg!("Bet received: {} lamports", amount);
         Ok(())
