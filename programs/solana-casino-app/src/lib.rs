@@ -49,3 +49,13 @@ pub mod solana_casino_app {
 
 #[derive(Accounts)]
 pub struct Initialize {}
+#[derive(Accounts)]
+pub struct PlaceBet<'info> {
+    #[account(mut)]
+    pub payer: Signer<'info>,
+
+    #[account(mut, seeds = [b"vault"], bump)]
+    pub vault: Account<'info, Vault>,
+
+    pub system_program: Program<'info, System>,
+}
