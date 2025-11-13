@@ -14,3 +14,11 @@ pub mod solana_casino_app {
 
 #[derive(Accounts)]
 pub struct Initialize {}
+
+#[error_code]
+pub enum CasinoError {
+    #[msg("Bet amount must be > 0")]
+    InvalidBet,
+    #[msg("Overflow")]
+    MathOverflow,
+}
