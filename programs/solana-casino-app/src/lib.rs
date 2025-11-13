@@ -1,5 +1,12 @@
 use anchor_lang::prelude::*;
 
+#[error_code]
+pub enum CasinoError {
+    #[msg("Bet amount must be > 0")]
+    InvalidBet,
+    #[msg("Overflow")]
+    MathOverflow,
+}
 declare_id!("8cEcfm2JA9itFW2gLSmJ91Fq3LPMYmp4V17heZUupPJX");
 
 #[program]
@@ -14,14 +21,6 @@ pub mod solana_casino_app {
 
 #[derive(Accounts)]
 pub struct Initialize {}
-
-#[error_code]
-pub enum CasinoError {
-    #[msg("Bet amount must be > 0")]
-    InvalidBet,
-    #[msg("Overflow")]
-    MathOverflow,
-}
 
 pub fn place_bet(ctx: Context<PlaceBet>, amount: u64) -> Result<()> {
     // validation
